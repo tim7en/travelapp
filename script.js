@@ -41,17 +41,42 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentDays = null;
     let currentMode = 'driving';
 
-    // Initialise map once the app container is shown
+    // Initialise map immediately when DOM is ready
     function initMap() {
         if (map) return;
-        map = L.map('map');
-        // start with world view
-        map.setView([20, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+        console.log('Initializing map...');
+        const mapContainer = document.getElementById('map');
+        if (!mapContainer) {
+            console.error('Map container not found!');
+            return;
+        }
+        console.log('Map container found, dimensions:', mapContainer.offsetWidth, 'x', mapContainer.offsetHeight);
+        try {
+            map = L.map('map');
+            // start with world view
+            map.setView([20, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            console.log('Map initialized successfully');
+        } catch (error) {
+            console.error('Error initializing map:', error);
+        }
     }
+
+    // Initialize map when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        // Hide controls and itinerary if not logged in
+        if (!currentUser) {
+            document.getElementById('controls').classList.add('hidden');
+            document.getElementById('itinerary-container').classList.add('hidden');
+        }
+        // Small delay to ensure DOM is fully ready
+        setTimeout(() => {
+            initMap();
+        }, 100);
+    });
 
     // Show or hide loading overlay
     function setLoading(show) {
@@ -86,7 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loginError.classList.add('hidden');
         loginContainer.classList.add('hidden');
         appContainer.classList.remove('hidden');
-        initMap();
+        document.getElementById('controls').classList.remove('hidden');
+        document.getElementById('itinerary-container').classList.remove('hidden');
         // if user previously planned a trip, restore it
         const storedTripMeta = localStorage.getItem(`${currentUser}_lastTrip`);
         if (storedTripMeta) {
@@ -479,7 +505,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentUser) {
         loginContainer.classList.add('hidden');
         appContainer.classList.remove('hidden');
-        initMap();
+        document.getElementById('controls').classList.remove('hidden');
+        document.getElementById('itinerary-container').classList.remove('hidden');
         // try restore last trip meta
         const metaStr = localStorage.getItem(`${currentUser}_lastTrip`);
         if (metaStr) {

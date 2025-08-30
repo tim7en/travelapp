@@ -29,10 +29,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-r3/uOw4VZ6YX/wEOrjPf+vL1XLjWtpRsfJe9SBFeCOeQZZSjA5gPyOHdwcQXeqpd7mHFE8RjO3XpBhoU9wE02g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* Basic resets */
-        body {
+        html, body {
             margin: 0;
+            height: 100%;
             font-family: Arial, Helvetica, sans-serif;
-            height: 100vh;
             overflow: hidden;
             background-color: #f5f7fa;
         }
@@ -140,6 +140,7 @@
             flex: 2;
             height: 100%;
             width: 100%;
+            min-height: 400px; /* Ensure minimum height for Leaflet */
         }
         #itinerary-container {
             flex: 1;
@@ -224,7 +225,7 @@
     <div id="loading-indicator">Loading...</div>
     <!-- Main application -->
     <div id="app-container" class="hidden">
-        <div id="controls">
+        <div id="controls" class="hidden">
             <input type="text" id="destination-input" placeholder="Destination (e.g., Paris)" />
             <input type="number" id="stay-length-input" min="1" value="3" placeholder="Days" />
             <select id="travel-mode-select">
@@ -237,7 +238,7 @@
         </div>
         <div id="content">
             <div id="map"></div>
-            <div id="itinerary-container"></div>
+            <div id="itinerary-container" class="hidden"></div>
         </div>
     </div>
     <script src="script.js"></script>
